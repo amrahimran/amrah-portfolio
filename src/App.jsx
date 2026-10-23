@@ -114,6 +114,39 @@ function Doodle({ type }) {
   return <svg className="mini-doodle" viewBox="0 0 70 70" aria-hidden="true"><path d="M17 50c4-30 30-43 36-23 5 19-30 28-30 7 0-12 14-16 22-11" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round"/></svg>;
 }
 
+
+// Small original line drawings: scalable, theme-aware and intentionally imperfect.
+function Sketch({ type, className = '' }) {
+  const strokes = { fill: 'none', stroke: 'currentColor', strokeWidth: 2.1, strokeLinecap: 'round', strokeLinejoin: 'round' };
+  const drawings = {
+    lotus: <g {...strokes}>
+      <path d="M40 65C27 54 28 38 40 17c12 21 13 37 0 48Z" />
+      <path d="M40 65C20 61 14 46 17 27c17 7 25 19 23 38Z" />
+      <path d="M40 65C60 61 66 46 63 27c-17 7-25 19-23 38Z" />
+      <path d="M39 65C19 70 9 60 5 45c17-1 28 5 34 20ZM41 65c20 5 30-5 34-20-17-1-28 5-34 20Z" />
+      <path d="M13 69c17 7 37 8 54 0M24 73c10 3 22 3 32 0" strokeWidth="1.5" />
+    </g>,
+    reading: <g {...strokes}>
+      <path d="M40 23c-12-8-24-8-34-4v40c13-4 24-3 34 5 10-8 21-9 34-5V19c-10-4-22-4-34 4Z" />
+      <path d="M40 23v41M13 28c9-2 15-1 21 3M13 37c8-2 14-1 21 3M47 31c6-4 13-5 20-3M47 40c7-4 13-5 20-3" strokeWidth="1.5" />
+      <path d="m13 10 2-5m-9 9-4-3m65-1 3-6m4 13 5-2" strokeWidth="1.5" />
+    </g>,
+    ocean: <g {...strokes}>
+      <path d="M3 49c14-1 17-30 34-30 15 0 17 23 6 29-8 4-16-3-11-10 3-4 8-4 12-1" />
+      <path d="M3 57c11 0 15-5 24-5 11 0 13 7 24 7 9 0 14-6 26-5M8 66c9-2 15-5 24-3 10 2 15 7 25 5 7-1 12-4 18-4" strokeWidth="1.7" />
+      <path d="m48 13 5-3 5 3m4-8 4-3 5 2" strokeWidth="1.5" />
+    </g>,
+    coffee: <g {...strokes}>
+      <path d="M18 29h42v22c0 13-9 18-21 18S18 64 18 51V29Z" />
+      <path d="M60 34c19-3 19 23 0 23M61 40c10-2 11 11 0 11" />
+      <path d="M12 72c16 5 42 6 57 0M17 77c13 3 34 3 47 0" strokeWidth="1.6" />
+      <path d="M29 23c-6-7 5-10 0-18M43 23c-6-7 5-10 0-18M54 23c-5-6 3-9 1-14" strokeWidth="1.7" />
+      <path d="M24 47c2 6 5 9 9 10" strokeWidth="1.4" />
+    </g>,
+  };
+  return <svg className={`sketch sketch--${type} ${className}`} viewBox="0 0 80 80" aria-hidden="true" focusable="false">{drawings[type]}</svg>;
+}
+
 function ProjectCard({ project, onOpen }) {
   return (
     <button className={`postcard ${project.color}`} onClick={() => onOpen(project.id)}>
@@ -204,7 +237,7 @@ export default function App() {
       {menuOpen && <button className="mobile-backdrop" aria-label="Close navigation" onClick={() => setMenuOpen(false)} />}
       <aside className={`sidebar ${menuOpen ? 'is-open' : ''}`}>
         <div className="sidebar-head">
-          <button className="brand" onClick={() => navigate('home')}>amrah<span>✳</span></button>
+          <button className="brand" onClick={() => navigate('home')}>amrah<Sketch type="lotus" className="brand-lotus" /></button>
           <button className="icon-button sidebar-close" onClick={() => setMenuOpen(false)} aria-label="Close menu"><X size={21} /></button>
           <p>A personal collection of things made, learned & loved.</p>
         </div>
@@ -216,7 +249,7 @@ export default function App() {
             </button>
           ))}
         </nav>
-        <div className="sidebar-bottom"><span className="sidebar-mark">✳</span><p>Currently somewhere between<br />code and curiosity.</p><span>COLOMBO, SRI LANKA ↗</span></div>
+        <div className="sidebar-bottom"><Sketch type="lotus" className="sidebar-mark" /><p>Currently somewhere between<br />code and curiosity.</p><span>COLOMBO, SRI LANKA ↗</span></div>
       </aside>
 
       <div className="main-column">
@@ -236,7 +269,7 @@ export default function App() {
                 <div className="landing-copy">
                   <span className="kicker">HELLO, YOU'VE FOUND MY CORNER OF THE INTERNET.</span>
                   <h1>Part code.<br /><em>Part curiosity.</em><br />All me<span className="period">.</span></h1>
-                  <p>I'm Amrah — a software engineering undergraduate who enjoys building useful things, investigating interesting questions and finding the story behind the solution.</p>
+                  <p>I'm Amrah, a software engineering undergraduate who enjoys building useful things, investigating interesting questions and finding the story behind a solution.</p>
                   <button className="pill-button" onClick={() => navigate('work')}>Explore My Projects <ArrowUpRight size={18} /></button>
                 </div>
                 <div className="hero-art" aria-label="Illustrated paper collage">
@@ -263,14 +296,14 @@ export default function App() {
             <section className="inner-page">
               <div className="section-heading"><span className="kicker">03 / THE HUMAN BEHIND THE SCREEN</span><h1>A little <em>about me.</em></h1></div>
               <div className="about-layout"><div className="about-prose">
-                <p className="about-lead">I like figuring out <em>how things work</em> — and asking whether there's a better way to make them.</p>
+                <p className="about-lead">I like figuring out <em>how things work</em>  and asking whether there's a better way to make them.</p>
                 <p>I'm completing a BEng (Hons) in Software Engineering at Staffordshire University. My projects have taken me from building Java game engines and cybersecurity applications to researching machine learning for clinical decision support.</p>
                 <p>I'm equally interested in the thinking around the technology: exploring data, understanding requirements, explaining findings and making complicated ideas feel approachable.</p>
                 <p>And outside the screen? Usually a book, the ocean, or a café I haven't tried yet.</p>
               </div><div className="interests"><div className="interests-title">OFF THE CLOCK <Doodle type="loop" /></div>
-                <div className="interest-item"><span className="interest-icon">✳</span><div><strong>Reading</strong><small>For the stories, ideas and rabbit holes.</small></div></div>
-                <div className="interest-item"><span className="interest-icon">≈</span><div><strong>The ocean</strong><small>My favourite place to clear my head.</small></div></div>
-                <div className="interest-item"><span className="interest-icon">☕</span><div><strong>Café hopping</strong><small>Always up for finding a new little spot.</small></div></div>
+                <div className="interest-item"><span className="interest-icon"><Sketch type="reading" /></span><div><strong>Reading</strong><small>For the stories, ideas and rabbit holes.</small></div></div>
+                <div className="interest-item"><span className="interest-icon"><Sketch type="ocean" /></span><div><strong>The ocean</strong><small>My favourite place to clear my head.</small></div></div>
+                <div className="interest-item"><span className="interest-icon"><Sketch type="coffee" /></span><div><strong>Café hopping</strong><small>Always up for finding a new little spot.</small></div></div>
                 <div className="interest-footer">COLLECTING SMALL MOMENTS, TOO. ↗</div>
               </div></div>
             </section>
@@ -284,7 +317,7 @@ export default function App() {
           )}
 
           {page === 'contact' && (
-            <section className="contact-page"><span className="kicker">05 / LEAVE A NOTE</span><h1>Let's make<br /><em>something good.</em></h1><p>An opportunity, a collaboration or an interesting conversation — my inbox is open.</p>
+            <section className="contact-page"><span className="kicker">05 / LEAVE A NOTE</span><h1>Let's make<br /><em>something good.</em></h1><p>An opportunity, a collaboration or an interesting conversation , my inbox is open !</p>
               <a className="contact-cta" href={`mailto:${contact.email}`}>Say hello <ArrowUpRight size={23} /></a>
               <div className="social-links"><a href={contact.github} target="_blank" rel="noopener noreferrer"><Code2 size={17} /> GitHub <ExternalLink size={13} /></a><a href={contact.linkedin} target="_blank" rel="noopener noreferrer"><BriefcaseBusiness size={17} /> LinkedIn <ExternalLink size={13} /></a><a href={`mailto:${contact.email}`}><Mail size={17} /> Email <ExternalLink size={13} /></a></div>
             </section>

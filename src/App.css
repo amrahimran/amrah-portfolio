@@ -988,3 +988,20 @@ img, svg {
 .github-note { margin: 9px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
 :root[data-theme='dark'] .github-cta:not(.github-cta--secondary) { color: #19212d; }
 @media (max-width: 700px) { .github-cta { width: 100%; } }
+
+/* Hand-drawn editorial illustrations — replace font glyphs and emoji. */
+.sketch { display: block; flex: none; width: 100%; height: 100%; overflow: visible; }
+.brand { align-items: center; gap: 2px; }
+.brand .brand-lotus { width: 37px; height: 37px; color: var(--coral); margin-left: 0; transform: rotate(-8deg); }
+.sidebar-bottom .sidebar-mark { display: block; width: 39px; height: 39px; color: var(--coral); transform: rotate(-8deg); }
+.interest-icon { display: flex; flex: 0 0 62px; width: 62px; height: 62px; align-items: center; justify-content: center; color: var(--coral); }
+.interest-icon .sketch { width: 58px; height: 58px; }
+.interest-item:nth-of-type(3) .interest-icon { color: var(--blue); }
+.interest-item:nth-of-type(4) .interest-icon { color: #a36c75; }
+:root[data-theme='dark'] .interest-item:nth-of-type(4) .interest-icon { color: #e6a7b4; }
+.interest-item { align-items: center; gap: 16px; }
+.interest-item > div { min-width: 0; }
+@media (max-width: 700px) {
+  .interest-icon { flex-basis: 51px; width: 51px; height: 51px; }
+  .interest-icon .sketch { width: 48px; height: 48px; }
+}
