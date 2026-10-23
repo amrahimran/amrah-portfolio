@@ -237,7 +237,7 @@ export default function App() {
                   <span className="kicker">HELLO, YOU'VE FOUND MY CORNER OF THE INTERNET.</span>
                   <h1>Part code.<br /><em>Part curiosity.</em><br />All me<span className="period">.</span></h1>
                   <p>I'm Amrah — a software engineering undergraduate who enjoys building useful things, investigating interesting questions and finding the story behind the solution.</p>
-                  <button className="pill-button" onClick={() => navigate('work')}>Explore my work <ArrowUpRight size={18} /></button>
+                  <button className="pill-button" onClick={() => navigate('work')}>Explore My Projects <ArrowUpRight size={18} /></button>
                 </div>
                 <div className="hero-art" aria-label="Illustrated paper collage">
                   <div className="hero-art-card art-card-blue"><span>NOTES FROM<br />SOMEWHERE<br /><i>IN BETWEEN.</i></span><Doodle type="star" /><small>VOL. 01 / 2026</small></div>
