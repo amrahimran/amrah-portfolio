@@ -923,3 +923,68 @@ img, svg {
     height: 105px;
   }
 }
+
+/* Additional project-collection colours and layout */
+.postcard.sky .postcard-art, .detail-banner.sky { background: #dceaf9; color: #35649e; }
+.postcard.mint .postcard-art, .detail-banner.mint { background: #d7eee7; color: #337e75; }
+.postcard.peach .postcard-art, .detail-banner.peach { background: #fbe0c9; color: #a66a38; }
+.postcard.rose .postcard-art, .detail-banner.rose { background: #f6dce8; color: #9c5678; }
+
+.collection-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.collection-heading > span:last-child {
+  color: var(--muted);
+  font: 10px 'Space Mono', monospace;
+}
+.collection-heading--archive { margin-top: 55px; }
+.repo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  color: var(--blue);
+  font-weight: 600;
+}
+.repo-link:hover { background: var(--wash); }
+@media (max-width: 700px) {
+  .collection-heading > span:last-child { font-size: 9px; }
+  .collection-heading--archive { margin-top: 38px; }
+}
+
+/* Prominent GitHub link immediately below each project introduction */
+.detail-intro { min-width: 0; }
+.github-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 100%;
+  min-height: 48px;
+  margin-top: 22px;
+  padding: 13px 20px;
+  background: var(--blue);
+  border: 1px solid var(--blue);
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  transition: transform .2s ease, opacity .2s ease;
+}
+.github-cta:hover { transform: translateY(-2px); opacity: .92; }
+.github-cta:focus-visible { outline: 3px solid var(--coral); outline-offset: 4px; }
+.github-cta--secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+.github-note { margin: 9px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+:root[data-theme='dark'] .github-cta:not(.github-cta--secondary) { color: #19212d; }
+@media (max-width: 700px) { .github-cta { width: 100%; } }
