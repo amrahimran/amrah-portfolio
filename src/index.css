@@ -1,7 +1,7 @@
-
 :root {
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 html,
@@ -13,8 +13,4 @@ body,
 
 body {
   margin: 0;
-}
-
-button {
-  cursor: pointer;
 }

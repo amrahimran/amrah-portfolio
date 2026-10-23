@@ -1,752 +1,224 @@
+import { useEffect, useState } from 'react';
+import { ArrowUpRight, ArrowLeft, Sun, Moon, Menu, X, Mail, Code2, BriefcaseBusiness, ExternalLink } from 'lucide-react';
+import './App.css';
 
-import { useEffect, useState } from "react";
-import {
-  ArrowUpRight,
-  ArrowDown,
-  Mail,
-  Menu,
-  X,
-  Sparkles,
-  Code2,
-  GraduationCap,
-  BriefcaseBusiness,
-  MapPin,
-  ExternalLink,
-} from "lucide-react";
-import "./App.css";
-
-const personal = {
-  name: "Amrah Imran",
-  email: "fathimaamrahimran@gmail.com",
-  github: "https://github.com/amrahimran",
-  linkedin: "https://www.linkedin.com/in/amrah-imran-879807219",
+const contact = {
+  email: 'fathimaamrahimran@gmail.com',
+  github: 'https://github.com/amrahimran',
+  linkedin: 'https://www.linkedin.com/in/amrah-imran-879807219',
 };
 
-const phrases = [
-  "Creative Problem Solver",
-  "Curious Technologist",
-  "Digital Storyteller",
-  "Lifelong Learner",
-];
-
 const projects = [
-  {
-    number: "01",
-    title: "HepatoAI",
-    category: "Artificial Intelligence / Healthcare",
-    description:
-      "My final-year research project exploring how machine learning can support fluid responsiveness assessment during liver transplant surgery. The project investigates physiological time-series data and compares predictive models as part of a clinical decision-support prototype.",
-    tags: ["Python", "Machine Learning", "React", "Healthcare AI"],
-    status: "In Development",
-    featured: true,
-    symbol: "✳",
-    color: "purple",
-  },
-  {
-    number: "02",
-    title: "Bastion",
-    category: "Cybersecurity / Software Development",
-    description:
-      "A desktop application designed to make system security assessments more accessible. Bastion brings together twelve types of vulnerability scans and simulations of common cyberattacks within a unified interface.",
-    tags: ["Laravel", "Python", "Nmap", "AI Integration"],
-    status: "University Project",
-    featured: true,
-    symbol: "⌘",
-    color: "pink",
-  },
-  {
-    number: "03",
-    title: "LUDO-T",
-    category: "Java / Software Architecture",
-    description:
-      "A Java-based Ludo game engine built around object-oriented programming, SOLID principles and design patterns. The system uses automated testing to validate game rules, movement logic and architectural behaviour.",
-    tags: ["Java", "OOP", "SOLID", "JUnit"],
-    status: "Completed",
-    featured: true,
-    symbol: "✦",
-    color: "blue",
-  },
-  {
-    number: "04",
-    title: "E-commerce Bookstore",
-    category: "Mobile Application Development",
-    description:
-      "A responsive Android bookstore application featuring light and dark themes, interactive interfaces, device-feature integration and local data storage.",
-    tags: ["Flutter", "Dart", "SQLite", "Android"],
-    status: "University Project",
-    featured: false,
-    symbol: "◈",
-    color: "peach",
-  },
-  {
-    number: "05",
-    title: "Car Booking System",
-    category: "Desktop Application Development",
-    description:
-      "A GUI-based car booking application demonstrating object-oriented programming, database integration and structured application development.",
-    tags: ["C#", "MySQL", "OOP"],
-    status: "University Project",
-    featured: false,
-    symbol: "◇",
-    color: "mint",
-  },
+  { id:'hepatoai', no:'01', title:'HepatoAI', kind:'AI · HEALTHCARE RESEARCH', color:'blue', motif:'pulse', year:'2026',
+    intro:'Investigating whether physiological time-series data can help predict fluid responsiveness during liver transplant surgery.',
+    story:'My final-year research explores an AI-assisted clinical decision-support prototype, not an autonomous medical tool. I worked with a VitalDB-derived dataset of 567 adult cases and 167,903 one-minute records, cleaned physiological measurements, created continuous five-minute windows and used case-level data splitting to reduce leakage.',
+    details:['Compared Logistic Regression, Random Forest and an Artificial Neural Network as supervised classifiers.','Evaluated discrimination and classification errors using AUROC, precision, recall and confusion matrices.','Investigated probability calibration and uncertainty with source-case cluster bootstrap evaluation.'],
+    tags:['Python','pandas','NumPy','scikit-learn','Google Colab','ML evaluation'], status:'Research prototype' },
+  { id:'ludo', no:'02', title:'LUDO-T', kind:'JAVA · SOFTWARE ARCHITECTURE', color:'coral', motif:'dice', year:'2026',
+    intro:'A game engine where the interesting part is everything happening underneath the board.',
+    story:'Built a modular Java Ludo engine with object-oriented architecture, explicit game rules and deterministic randomness. I used design patterns where they solved real architectural problems, rather than treating them as a checklist.',
+    details:['Applied Strategy, Factory, Builder, Observer, Command, Chain of Responsibility, State, Facade and Singleton patterns.','Separated movement, blockades and mystery rules into focused services, with SOLID principles guiding responsibilities.','Wrote 137 passing JUnit tests, reaching 93% line, 96% method and 79% branch coverage.'],
+    tags:['Java','SOLID','Design patterns','JUnit','Testing'], status:'Completed' },
+  { id:'bastion', no:'03', title:'Bastion', kind:'CYBERSECURITY · SCRUM', color:'sage', motif:'shield', year:'2025–26',
+    intro:'Making security assessment workflows easier to understand and manage.',
+    story:'A collaborative university project developing a cybersecurity assessment application combining vulnerability scanning and attack-simulation features. Across the year-long Scrum project, I rotated through Business Analyst, Project Manager and Developer responsibilities.',
+    details:['Created user stories and maintained the product backlog to organise development work.','Used Trello and ClickUp for task management and project coordination.','Contributed to a system bringing together twelve vulnerability scan types and simulated attack scenarios.'],
+    tags:['Laravel','Python','Nmap','Scrum','Trello','ClickUp'], status:'University project' },
+  { id:'bookstore', no:'04', title:'Bookstore', kind:'FLUTTER · MOBILE', color:'butter', motif:'book', year:'2025',
+    intro:'A mobile bookstore experience designed for comfortable browsing.',
+    story:'Developed an Android bookstore application with responsive layouts, orientation support, local storage and light/dark interface options.',
+    details:['Built screens and interactions with Flutter and Dart.','Integrated SQLite for local data handling.','Worked with app state and device features.'],
+    tags:['Flutter','Dart','SQLite','Android'], status:'University project' },
+  { id:'booking', no:'05', title:'Car Booking', kind:'C# · DESKTOP', color:'lilac', motif:'road', year:'2024',
+    intro:'A straightforward booking system with a structured application backend.',
+    story:'Created a graphical car-booking application connecting user-facing forms with a relational database.',
+    details:['Used C# and object-oriented programming to structure application logic.','Integrated MySQL for persistent booking data.'],
+    tags:['C#','MySQL','OOP'], status:'University project' },
 ];
 
 const skillGroups = [
-  {
-    title: "Development",
-    symbol: "01",
-    skills: [
-      "JavaScript",
-      "React",
-      "HTML & CSS",
-      "Tailwind CSS",
-      "PHP / Laravel",
-      "Python",
-      "C#",
-      "Java",
-      "Flutter",
-    ],
-  },
-  {
-    title: "Databases & APIs",
-    symbol: "02",
-    skills: [
-      "MySQL",
-      "PostgreSQL",
-      "MongoDB",
-      "SQLite",
-      "RESTful APIs",
-    ],
-  },
-  {
-    title: "Tools & Practices",
-    symbol: "03",
-    skills: [
-      "Git & GitHub",
-      "VS Code",
-      "Object-Oriented Programming",
-      "SOLID Principles",
-      "Agile Development",
-      "Software Testing",
-    ],
-  },
-  {
-    title: "Exploring",
-    symbol: "04",
-    skills: [
-      "Machine Learning",
-      "Artificial Intelligence",
-      "Business Analysis",
-      "UI/UX",
-      "Technical Communication",
-      "Creative Problem-Solving",
-    ],
-  },
+  { name:'BUILD', items:'JavaScript · React · HTML/CSS · Tailwind · PHP/Laravel · Java · C# · Flutter' },
+  { name:'ANALYSE', items:'Python · pandas · NumPy · scikit-learn · SQL · Excel · Google Sheets' },
+  { name:'WORK WITH', items:'Git/GitHub · JUnit · Google Colab · Trello · ClickUp · Agile/Scrum · SOLID' },
 ];
 
-const stars = Array.from({ length: 35 }, (_, i) => ({
-  left: `${(i * 37.7 + 13) % 100}%`,
-  top: `${(i * 23.9 + 7) % 100}%`,
-  delay: `${(i % 9) * 0.45}s`,
-  size: i % 5 === 0 ? 3 : 2,
-}));
+function Motif({ type, className='' }) {
+  const common = { fill:'none', stroke:'currentColor', strokeWidth:2.2, strokeLinecap:'round', strokeLinejoin:'round' };
+  return <svg className={`motif ${className}`} viewBox="0 0 240 180" role="img" aria-label={`${type} illustration`}>
+    {type==='pulse' && <g {...common}><path d="M8 95h48l19-42 26 89 26-68 17 21h88"/><path d="M30 36c27-17 52-12 69 1M155 143c24 9 44 5 60-8" strokeDasharray="4 9" opacity=".5"/><circle cx="127" cy="74" r="7" fill="currentColor" stroke="none"/></g>}
+    {type==='dice' && <g {...common} transform="rotate(-12 120 90)"><rect x="61" y="29" width="118" height="118" rx="15"/><circle cx="88" cy="56" r="6" fill="currentColor"/><circle cx="151" cy="56" r="6" fill="currentColor"/><circle cx="120" cy="88" r="6" fill="currentColor"/><circle cx="88" cy="120" r="6" fill="currentColor"/><circle cx="151" cy="120" r="6" fill="currentColor"/></g>}
+    {type==='shield' && <g {...common}><path d="M120 19l70 28v42c0 42-27 69-70 84-43-15-70-42-70-84V47z"/><path d="M91 94l20 20 40-44"/><path d="M26 28l8-10m-4 39l-14-4m185 65l16 8"/></g>}
+    {type==='book' && <g {...common}><path d="M120 47c-27-18-55-19-91-9v99c35-11 65-8 91 10 26-18 56-21 91-10V38c-36-10-64-9-91 9z"/><path d="M120 47v100M48 59c20-4 37-1 53 7m38 0c16-8 33-11 53-7"/></g>}
+    {type==='road' && <g {...common}><path d="M91 15L47 166M149 15l44 151M120 23v25m0 22v28m0 22v29"/><path d="M28 166h184"/></g>}
+  </svg>;
+}
 
-function useTyping() {
-  const [word, setWord] = useState("");
-  const [index, setIndex] = useState(0);
-  const [deleting, setDeleting] = useState(false);
+function Doodle({ type }) {
+  if(type==='wave') return <svg className="mini-doodle" viewBox="0 0 120 44" aria-hidden="true"><path d="M3 21c14-18 25 18 39 0s25 18 39 0 25 18 36 0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg>;
+  if(type==='star') return <svg className="mini-doodle" viewBox="0 0 60 60" aria-hidden="true"><path d="M30 5l6 19 19 6-19 6-6 19-6-19-19-6 19-6z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/></svg>;
+  return <svg className="mini-doodle" viewBox="0 0 70 70" aria-hidden="true"><path d="M17 50c4-30 30-43 36-23 5 19-30 28-30 7 0-12 14-16 22-11" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round"/></svg>;
+}
+
+function ProjectCard({ project, onOpen }) {
+  return (
+    <button className={`postcard ${project.color}`} onClick={() => onOpen(project.id)}>
+      <div className="postcard-top"><span>FIELD NOTE / {project.no}</span><span>{project.year}</span></div>
+      <div className="postcard-art"><Motif type={project.motif} /><span className="postmark">A.I.<br />✳</span></div>
+      <div className="postcard-body">
+        <span className="kicker">{project.kind}</span>
+        <div className="postcard-title-row"><h3>{project.title}</h3><ArrowUpRight size={22} /></div>
+        <p>{project.intro}</p>
+      </div>
+    </button>
+  );
+}
+
+function ProjectDetail({ project, onBack }) {
+  return (
+    <div className="detail">
+      <button className="text-button" onClick={onBack}><ArrowLeft size={17} /> All projects</button>
+      <div className={`detail-banner ${project.color}`}>
+        <div className="detail-banner-meta"><span>PROJECT FILE / {project.no}</span><span>{project.year}</span></div>
+        <Motif type={project.motif} />
+      </div>
+      <div className="detail-grid">
+        <div><span className="kicker">{project.kind}</span><h1>{project.title}<span className="period">.</span></h1><p className="detail-lead">{project.intro}</p></div>
+        <div className="detail-copy"><span className="kicker">THE STORY</span><p>{project.story}</p>
+          <span className="kicker">WHAT I WORKED ON</span><ul>{project.details.map((item) => <li key={item}>{item}</li>)}</ul>
+          <span className="kicker">TOOLS & METHODS</span><div className="tag-row">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+          <p className="detail-status">{project.status}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const navigation = [
+  { id: 'home', number: '01', label: 'The beginning' },
+  { id: 'work', number: '02', label: 'Selected work' },
+  { id: 'about', number: '03', label: 'A little about me' },
+  { id: 'skills', number: '04', label: 'Toolkit & experience' },
+  { id: 'contact', number: '05', label: 'Say hello' },
+];
+
+export default function App() {
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('amrah-theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+    } catch { /* storage can be unavailable */ }
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+  const [page, setPage] = useState('home');
+  const [selected, setSelected] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const target = phrases[index];
-    const finished = word === target;
-    const empty = word === "";
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('amrah-theme', theme); } catch { /* ignore */ }
+  }, [theme]);
 
-    const delay =
-      finished && !deleting ? 1800 : deleting ? 45 : 85;
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [page, selected]);
 
-    const timer = setTimeout(() => {
-      if (finished && !deleting) {
-        setDeleting(true);
-      } else if (empty && deleting) {
-        setDeleting(false);
-        setIndex((i) => (i + 1) % phrases.length);
-      } else {
-        setWord(
-          target.slice(0, word.length + (deleting ? -1 : 1))
-        );
-      }
-    }, delay);
+  const navigate = (id) => {
+    setPage(id);
+    setSelected(null);
+    setMenuOpen(false);
+  };
 
-    return () => clearTimeout(timer);
-  }, [word, index, deleting]);
+  const openProject = (id) => { setPage('work'); setSelected(id); setMenuOpen(false); };
+  const currentProject = projects.find((project) => project.id === selected);
 
-  return word;
-}
-
-function SectionHeading({ number, eyebrow, title, accent }) {
   return (
-    <div className="section-heading">
-      <span className="section-label">
-        {number} / {eyebrow}
-      </span>
-      <h2>
-        {title} <em>{accent}</em>
-      </h2>
-    </div>
-  );
-}
-
-function ProjectCard({ project }) {
-  return (
-    <article
-      className={`project-card ${
-        project.featured ? "featured-project" : ""
-      }`}
-    >
-      <div className={`project-visual ${project.color}`}>
-        <span className="project-visual-symbol">
-          {project.symbol}
-        </span>
-        <span className="project-visual-number">
-          {project.number} / 05
-        </span>
-        <span className="project-visual-caption">
-          {project.category}
-        </span>
-      </div>
-
-      <div className="project-details">
-        <div className="project-meta">
-          <span>{project.category}</span>
-          <span className="project-status">{project.status}</span>
+    <div className="site-shell">
+      {menuOpen && <button className="mobile-backdrop" aria-label="Close navigation" onClick={() => setMenuOpen(false)} />}
+      <aside className={`sidebar ${menuOpen ? 'is-open' : ''}`}>
+        <div className="sidebar-head">
+          <button className="brand" onClick={() => navigate('home')}>amrah<span>✳</span></button>
+          <button className="icon-button sidebar-close" onClick={() => setMenuOpen(false)} aria-label="Close menu"><X size={21} /></button>
+          <p>A personal collection of things made, learned & loved.</p>
         </div>
-
-        <h3>{project.title}</h3>
-        <p>{project.description}</p>
-
-        <div className="project-tags">
-          {project.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function App() {
-  const typed = useTyping();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [avatarHappy, setAvatarHappy] = useState(false);
-
-  const navigation = [
-    "Home",
-    "About",
-    "Projects",
-    "Skills",
-    "Experience",
-    "Contact",
-  ];
-
-  return (
-    <div className="site">
-      <div className="stars" aria-hidden="true">
-        {stars.map((star, i) => (
-          <span
-            key={i}
-            className="star"
-            style={{
-              left: star.left,
-              top: star.top,
-              width: star.size,
-              height: star.size,
-              animationDelay: star.delay,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* NAVIGATION */}
-      <header className="navbar">
-        <a className="logo" href="#home">
-          <span className="logo-icon">✳</span>
-          amrah<span className="logo-dot">.</span>
-        </a>
-
-        <nav
-          className={`nav-links ${menuOpen ? "open" : ""}`}
-          aria-label="Main navigation"
-        >
+        <div className="nav-caption">THE INDEX <span>2026 / 01</span></div>
+        <nav className="side-nav" aria-label="Main navigation">
           {navigation.map((item) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item}
-            </a>
+            <button key={item.id} className={page === item.id ? 'active' : ''} onClick={() => navigate(item.id)} aria-current={page === item.id ? 'page' : undefined}>
+              <span className="nav-number">{item.number}</span><span>{item.label}</span><ArrowUpRight size={17} />
+            </button>
           ))}
         </nav>
+        <div className="sidebar-bottom"><span className="sidebar-mark">✳</span><p>Currently somewhere between<br />code and curiosity.</p><span>COLOMBO, SRI LANKA ↗</span></div>
+      </aside>
 
-        <a className="nav-contact" href="#contact">
-          Let's connect <ArrowUpRight size={16} />
-        </a>
-
-        <button
-          className="menu-toggle"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle navigation"
-          aria-expanded={menuOpen}
-        >
-          {menuOpen ? <X /> : <Menu />}
-        </button>
-      </header>
-
-      <main>
-        {/* HERO */}
-        <section className="hero" id="home">
-          <div className="hero-content">
-            <div className="eyebrow">
-              <span className="eyebrow-sparkle">✦</span>
-              HELLO, WORLD! I'M
-            </div>
-
-            <h1>
-              Amrah
-              <br />
-              <span>Imran.</span>
-            </h1>
-
-            <div className="role">
-              <span>Software Engineering Student</span>
-              <span className="role-second">
-                &amp; <em>{typed}</em>
-                <span className="cursor">|</span>
-              </span>
-            </div>
-
-            <p className="hero-description">
-              Somewhere between logic and imagination is where
-              I feel most at home. I'm a curious technologist
-              exploring software, AI, business thinking and
-              creative ideas — turning interesting problems
-              into thoughtful digital solutions.
-            </p>
-
-            <div className="hero-buttons">
-              <a href="#projects" className="btn btn-primary">
-                Explore my work <ArrowUpRight size={18} />
-              </a>
-
-              <a href="#about" className="btn btn-secondary">
-                More about me
-              </a>
-            </div>
-
-            <div className="socials">
-              <a
-                href={personal.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="social-text-icon"
-              >
-                GH
-              </a>
-
-              <a
-                href={personal.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="social-text-icon"
-              >
-                in
-              </a>
-
-              <a
-                href={`mailto:${personal.email}`}
-                aria-label="Email"
-              >
-                <Mail size={20} />
-              </a>
-
-              <span className="social-note">
-                find me around the internet ↗
-              </span>
-            </div>
+      <div className="main-column">
+        <header className="topbar">
+          <div className="topbar-left">
+            <button className="icon-button menu-toggle" onClick={() => setMenuOpen(true)} aria-label="Open navigation"><Menu size={21} /></button>
+            <span className="topbar-title">AMRAH / {navigation.find((item) => item.id === page)?.label.toUpperCase()}</span>
           </div>
+          <div className="topbar-right"><span className="availability"><span /> OPEN TO OPPORTUNITIES</span><button className="icon-button theme-toggle" onClick={() => setTheme((value) => value === 'dark' ? 'light' : 'dark')} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>{theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}</button></div>
+        </header>
 
-          <div className="hero-art">
-            <div className="avatar-orbit" aria-hidden="true" />
-
-            <span className="decor decor-one" aria-hidden="true">
-              ✧
-            </span>
-            <span className="decor decor-two" aria-hidden="true">
-              ✦
-            </span>
-            <span className="decor decor-three" aria-hidden="true">
-              ✳
-            </span>
-
-            <button
-              className={`avatar-button ${
-                avatarHappy ? "happy" : ""
-              }`}
-              onClick={() => setAvatarHappy(!avatarHappy)}
-              aria-label="Interact with illustrated avatar"
-            >
-              <img
-                src="/avatar.png"
-                alt="Hand-drawn chibi illustration of Amrah"
-                className="avatar"
-              />
-            </button>
-
-            <div className="avatar-message" aria-live="polite">
-              {avatarHappy
-                ? "made of code & curiosity ✦"
-                : "a little more than pixels ✧"}
-            </div>
-
-            <div className="art-caption">
-              <Sparkles size={15} />
-              a little imagination goes a long way
-            </div>
-          </div>
-
-          <div className="hero-bottom">
-            <a href="#about">
-              SCROLL TO EXPLORE <ArrowDown size={14} />
-            </a>
-            <span className="bottom-quote">
-              made with curiosity & a little stardust ✳
-            </span>
-          </div>
-        </section>
-
-        {/* ABOUT */}
-        <section className="content-section about-section" id="about">
-          <SectionHeading
-            number="01"
-            eyebrow="THE PERSON BEHIND THE CODE"
-            title="A little about"
-            accent="me."
-          />
-
-          <div className="about-layout">
-            <div className="about-main">
-              <p className="about-lead">
-                I'm a Software Engineering undergraduate who
-                enjoys the intersection of logic, creativity
-                and meaningful problem-solving.
-              </p>
-
-              <p>
-                I love understanding how things work — whether
-                that's the architecture behind an application,
-                the reasoning behind an algorithm, or the
-                little design decisions that make a digital
-                experience feel intuitive.
-              </p>
-
-              <p>
-                My interests extend beyond writing code.
-                I enjoy storytelling, explaining complex
-                concepts in simple ways, and exploring how
-                technology can turn interesting ideas into
-                practical solutions.
-              </p>
-
-              <p>
-                I'm naturally curious, adaptable and always
-                eager to learn. I'm especially interested in
-                opportunities that connect software
-                development, artificial intelligence,
-                analytical thinking and business needs.
-              </p>
-            </div>
-
-            <aside className="about-aside">
-              <div className="about-fact">
-                <span>BASED IN</span>
-                <strong>
-                  <MapPin size={15} />
-                  Sri Lanka
-                </strong>
-              </div>
-
-              <div className="about-fact">
-                <span>CURRENTLY STUDYING</span>
-                <strong>BEng (Hons) Software Engineering</strong>
-              </div>
-
-              <div className="about-fact">
-                <span>UNIVERSITY</span>
-                <strong>Staffordshire University</strong>
-              </div>
-
-              <div className="about-fact">
-                <span>INTERESTS</span>
-                <strong>
-                  Software · AI · Business · Creativity
-                </strong>
-              </div>
-            </aside>
-          </div>
-
-          <div className="about-quote">
-            <span>✳</span>
-            <p>
-              I believe the best ideas happen when curiosity
-              meets the courage to try something new.
-            </p>
-          </div>
-        </section>
-
-        {/* PROJECTS */}
-        <section className="content-section projects-section" id="projects">
-          <SectionHeading
-            number="02"
-            eyebrow="SELECTED WORK"
-            title="Things I've"
-            accent="built."
-          />
-
-          <p className="section-intro">
-            A collection of university projects, technical
-            experiments and ideas that have helped shape
-            the way I think and build.
-          </p>
-
-          <div className="featured-grid">
-            {projects
-              .filter((project) => project.featured)
-              .map((project) => (
-                <ProjectCard
-                  key={project.title}
-                  project={project}
-                />
-              ))}
-          </div>
-
-          <div className="more-projects-heading">
-            <h3>More explorations</h3>
-            <span>THE LEARNING NEVER REALLY STOPS ✦</span>
-          </div>
-
-          <div className="secondary-grid">
-            {projects
-              .filter((project) => !project.featured)
-              .map((project) => (
-                <ProjectCard
-                  key={project.title}
-                  project={project}
-                />
-              ))}
-          </div>
-        </section>
-
-        {/* SKILLS */}
-        <section className="content-section skills-section" id="skills">
-          <SectionHeading
-            number="03"
-            eyebrow="MY TOOLKIT"
-            title="Skills &"
-            accent="curiosities."
-          />
-
-          <p className="section-intro">
-            A mix of technologies I've worked with,
-            concepts I've explored and areas I'm
-            continuing to develop.
-          </p>
-
-          <div className="skills-grid">
-            {skillGroups.map((group) => (
-              <div className="skill-group" key={group.title}>
-                <div className="skill-group-heading">
-                  <span>{group.symbol}</span>
-                  <h3>{group.title}</h3>
+        <main className="page-content" key={`${page}-${selected || 'index'}`}>
+          {page === 'home' && (
+            <section className="landing">
+              <div className="eyebrow-row"><span>AN INTRODUCTION, OF SORTS.</span><span>NO. 001 — EST. 2026</span></div>
+              <div className="landing-grid">
+                <div className="landing-copy">
+                  <span className="kicker">HELLO, YOU'VE FOUND MY CORNER OF THE INTERNET.</span>
+                  <h1>Part code.<br /><em>Part curiosity.</em><br />All me<span className="period">.</span></h1>
+                  <p>I'm Amrah — a software engineering undergraduate who enjoys building useful things, investigating interesting questions and finding the story behind the solution.</p>
+                  <button className="pill-button" onClick={() => navigate('work')}>Explore my work <ArrowUpRight size={18} /></button>
                 </div>
-
-                <div className="skill-tags">
-                  {group.skills.map((skill) => (
-                    <span key={skill}>{skill}</span>
-                  ))}
+                <div className="hero-art" aria-label="Illustrated paper collage">
+                  <div className="hero-art-card art-card-blue"><span>NOTES FROM<br />SOMEWHERE<br /><i>IN BETWEEN.</i></span><Doodle type="star" /><small>VOL. 01 / 2026</small></div>
+                  <div className="hero-art-card art-card-coral"><span>MAKE<br />THINGS<br />MATTER.</span><Doodle type="wave" /></div>
+                  <div className="hero-art-stamp">A LITTLE BIT<br />OF EVERYTHING ↗</div>
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="landing-bottom"><span>DEVELOPMENT / AI / ANALYSIS / LITTLE ADVENTURES</span><span>FLIP THROUGH THE INDEX ↗</span></div>
+            </section>
+          )}
 
-          <div className="skills-note">
-            <Code2 size={19} />
-            <span>
-              Always learning. Always experimenting.
-              Never quite done exploring.
-            </span>
-          </div>
-        </section>
+          {page === 'work' && (currentProject ? <ProjectDetail project={currentProject} onBack={() => setSelected(null)} /> : (
+            <section className="inner-page">
+              <div className="section-heading"><span className="kicker">02 / THE THINGS I MAKE</span><h1>Selected <em>work.</em></h1><p>Research experiments, software projects and things I learned by making them. Pick a postcard to explore the story.</p></div>
+              <div className="project-grid">{projects.map((project) => <ProjectCard key={project.id} project={project} onOpen={openProject} />)}</div>
+            </section>
+          ))}
 
-        {/* EXPERIENCE */}
-        <section
-          className="content-section experience-section"
-          id="experience"
-        >
-          <SectionHeading
-            number="04"
-            eyebrow="MY JOURNEY"
-            title="Experience &"
-            accent="education."
-          />
+          {page === 'about' && (
+            <section className="inner-page">
+              <div className="section-heading"><span className="kicker">03 / THE HUMAN BEHIND THE SCREEN</span><h1>A little <em>about me.</em></h1></div>
+              <div className="about-layout"><div className="about-prose">
+                <p className="about-lead">I like figuring out <em>how things work</em> — and asking whether there's a better way to make them.</p>
+                <p>I'm completing a BEng (Hons) in Software Engineering at Staffordshire University. My projects have taken me from building Java game engines and cybersecurity applications to researching machine learning for clinical decision support.</p>
+                <p>I'm equally interested in the thinking around the technology: exploring data, understanding requirements, explaining findings and making complicated ideas feel approachable.</p>
+                <p>And outside the screen? Usually a book, the ocean, or a café I haven't tried yet.</p>
+              </div><div className="interests"><div className="interests-title">OFF THE CLOCK <Doodle type="loop" /></div>
+                <div className="interest-item"><span className="interest-icon">✳</span><div><strong>Reading</strong><small>For the stories, ideas and rabbit holes.</small></div></div>
+                <div className="interest-item"><span className="interest-icon">≈</span><div><strong>The ocean</strong><small>My favourite place to clear my head.</small></div></div>
+                <div className="interest-item"><span className="interest-icon">☕</span><div><strong>Café hopping</strong><small>Always up for finding a new little spot.</small></div></div>
+                <div className="interest-footer">COLLECTING SMALL MOMENTS, TOO. ↗</div>
+              </div></div>
+            </section>
+          )}
 
-          <div className="journey-grid">
-            <div className="journey-column">
-              <div className="journey-heading">
-                <BriefcaseBusiness size={20} />
-                <h3>Experience & Involvement</h3>
-              </div>
+          {page === 'skills' && (
+            <section className="inner-page"><div className="section-heading"><span className="kicker">04 / MY TOOLKIT</span><h1>Things I <em>work with.</em></h1><p>A mix of technologies, approaches and tools I've used across projects.</p></div>
+              <div className="skills-table">{skillGroups.map((group, index) => <div className="skills-row" key={group.name}><span>0{index + 1}</span><h3>{group.name}</h3><p>{group.items}</p></div>)}</div>
+              <div className="experience-strip"><span className="kicker">ALSO PART OF THE STORY</span><div><h3>Freelance web development tutor</h3><p>March – October 2024 · Helping learners understand web development through practical explanations.</p></div><div><h3>Scrum project roles</h3><p>Bastion · User stories, backlog management, project coordination and development using Trello and ClickUp.</p></div></div>
+            </section>
+          )}
 
-              <div className="timeline-item">
-                <span className="timeline-date">
-                  MAR — OCT 2024
-                </span>
-                <h4>Freelance Web Development Tutor</h4>
-                <p>
-                  Supported learners in understanding web
-                  development concepts, strengthening
-                  programming fundamentals and translating
-                  technical ideas into practical knowledge.
-                </p>
-              </div>
-
-              <div className="timeline-item">
-                <span className="timeline-date">
-                  STUDENT INVOLVEMENT
-                </span>
-                <h4>Full Stack Computing Society</h4>
-                <p>
-                  Member of the computing society at APIIT,
-                  engaging with a community interested in
-                  software development and technology.
-                </p>
-              </div>
-            </div>
-
-            <div className="journey-column">
-              <div className="journey-heading">
-                <GraduationCap size={21} />
-                <h3>Education & Learning</h3>
-              </div>
-
-              <div className="timeline-item">
-                <span className="timeline-date">
-                  2024 — PRESENT
-                </span>
-                <h4>BEng (Hons) Software Engineering</h4>
-                <p>
-                  Staffordshire University
-                </p>
-                <p>
-                  Studying software development, programming,
-                  system design and computing principles,
-                  alongside my final-year research into
-                  AI-based clinical decision support.
-                </p>
-              </div>
-
-              <div className="timeline-item">
-                <span className="timeline-date">
-                  2024
-                </span>
-                <h4>Agile Project Management Learning</h4>
-                <p>
-                  Completed Agile-related learning through
-                  LinkedIn Learning, as listed on my CV.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CONTACT */}
-        <section
-          className="content-section contact-section"
-          id="contact"
-        >
-          <span className="section-label">
-            05 / LET'S CONNECT
-          </span>
-
-          <div className="contact-layout">
-            <div>
-              <h2>
-                Have an idea?
-                <br />
-                <em>Let's talk.</em>
-              </h2>
-
-              <p>
-                Whether it's a project, an opportunity,
-                a collaboration or simply a conversation
-                about technology and creative ideas,
-                I'd love to connect.
-              </p>
-
-              <a
-                className="btn btn-primary"
-                href={`mailto:${personal.email}`}
-              >
-                Say hello <ArrowUpRight size={18} />
-              </a>
-            </div>
-
-            <div className="contact-links">
-              <a href={`mailto:${personal.email}`}>
-                <span>
-                  <Mail size={19} />
-                  Email
-                </span>
-                <ArrowUpRight size={18} />
-              </a>
-
-              <a
-                href={personal.github}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>
-                  <Code2 size={19} />
-                  GitHub
-                </span>
-                <ExternalLink size={17} />
-              </a>
-
-              <a
-                href={personal.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>
-                  <BriefcaseBusiness size={19} />
-                  LinkedIn
-                </span>
-                <ExternalLink size={17} />
-              </a>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <span>© {new Date().getFullYear()} Amrah Imran</span>
-        <span>Thoughtfully coded, creatively imagined ✳</span>
-        <a href="#home">Back to top ↑</a>
-      </footer>
+          {page === 'contact' && (
+            <section className="contact-page"><span className="kicker">05 / LEAVE A NOTE</span><h1>Let's make<br /><em>something good.</em></h1><p>An opportunity, a collaboration or an interesting conversation — my inbox is open.</p>
+              <a className="contact-cta" href={`mailto:${contact.email}`}>Say hello <ArrowUpRight size={23} /></a>
+              <div className="social-links"><a href={contact.github} target="_blank" rel="noopener noreferrer"><Code2 size={17} /> GitHub <ExternalLink size={13} /></a><a href={contact.linkedin} target="_blank" rel="noopener noreferrer"><BriefcaseBusiness size={17} /> LinkedIn <ExternalLink size={13} /></a><a href={`mailto:${contact.email}`}><Mail size={17} /> Email <ExternalLink size={13} /></a></div>
+            </section>
+          )}
+        </main>
+        <footer className="site-footer"><span>© {new Date().getFullYear()} AMRAH IMRAN</span><span>MADE WITH CURIOSITY ✳</span></footer>
+      </div>
     </div>
   );
 }
-
-export default App;
